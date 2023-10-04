@@ -11,21 +11,25 @@ import ThemeProvider from '@/components/ThemeProvider';
 import { SessionProvider } from 'next-auth/react';
 
 export const config = { ssr: false };
-export default async function RootLayout({
-  children,
-  params: { locale },
-  session,  // Add this line to get the session from your pageProps
-}: {
-  children: React.ReactNode;
-  params: Record<string, any>;
-  session?: any;  // Add this line to define the session in your type
-}) {
+export default async function RootLayout(params:any) {
+  if(!params) {
+    return null;
+  }
+  const {
+    children,
+    // params1,
+    session,  // Add this line to get the session from your pageProps
+  } = params;
   let messages;
+  const locale = 'zh-CN'
   try {
     messages = (await import(`@/locale/messages/${locale}.json`)).default;
+    console.log('messages',messages)
   } catch (error) {
     notFound();
   }
+
+  console.log('locale',locale)
 
   return (
     <html lang={locale}>
