@@ -11,8 +11,8 @@ import ThemeProvider from '@/components/ThemeProvider';
 import { SessionProvider } from 'next-auth/react';
 
 export const config = { ssr: false };
-export default async function RootLayout(params:any) {
-  if(!params) {
+export default function RootLayout(params: any) {
+  if (!params) {
     return null;
   }
   const {
@@ -20,16 +20,16 @@ export default async function RootLayout(params:any) {
     // params1,
     session,  // Add this line to get the session from your pageProps
   } = params;
-  let messages;
+  let messages = {
+    site: {
+      title: 'HaoOffer.net - 北美秋季招聘必备',
+      desc: '已帮助300+学员斩获北美顶级offer'
+    },
+    nav: { home: '首页' },
+    theme: { light: '亮色', dark: '暗色', system: '系统' }
+  };
   const locale = 'zh-CN'
-  try {
-    messages = (await import(`@/locale/messages/${locale}.json`)).default;
-    console.log('messages',messages)
-  } catch (error) {
-    notFound();
-  }
-
-  console.log('locale',locale)
+  console.log('locale', locale)
 
   return (
     <html lang={locale}>
@@ -42,7 +42,7 @@ export default async function RootLayout(params:any) {
               <main>{children}</main>
             </ThemeProvider>
           </NextIntlClientProvider>
-        </SessionProvider>  
+        </SessionProvider>
       </body>
     </html>
   );
