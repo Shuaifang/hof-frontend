@@ -9,6 +9,7 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { SiteHeader } from '@/components/SiteHeader';
 import ThemeProvider from '@/components/ThemeProvider';
 import { SessionProvider } from 'next-auth/react';
+import { ConfigProvider } from '@/contexts/GlobalContext';
 
 export const config = { ssr: false };
 export default function RootLayout(params: any) {
@@ -37,10 +38,16 @@ export default function RootLayout(params: any) {
       <body>
         <SessionProvider session={session}>
           <NextIntlClientProvider locale={locale} messages={messages}>
-            <ThemeProvider locale={locale}>
-              <SiteHeader />
-              <main>{children}</main>
-            </ThemeProvider>
+            <ConfigProvider>
+              <ThemeProvider locale={locale}>
+                <SiteHeader />
+                <main>{children}</main>
+                <footer className='text-center font-bold text-[#444] my-[15px]'>
+                  Copyright © 2022 Hao Offer  保留所有权利。
+                  <div className='h-[30px]'></div>
+                </footer>
+              </ThemeProvider>
+            </ConfigProvider>
           </NextIntlClientProvider>
         </SessionProvider>
       </body>

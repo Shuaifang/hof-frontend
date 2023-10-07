@@ -30,7 +30,7 @@ type FilterOption = {
     name: string;
 };
 
-type FilterKey = Exclude<keyof Filters, 'companyName'>;
+type FilterKey = keyof Filters;
 
 const JobFilters: React.FC<{
     filters: Filters;
@@ -43,7 +43,8 @@ const JobFilters: React.FC<{
         region: configData?.nation?.infoList || [],
         jobType: configData?.type?.infoList || [],
         positionType: configData?.target_group?.infoList || [],
-        companyType: ['Facebook', 'Linkedin', 'Amazon', 'Apple', 'Netflix', 'Google', 'Microsoft'].map(tem => ({ name: tem, key: tem })),
+        companyType: [],
+        companyName: [],
     };
 
     const filterLabels: Record<FilterKey, string> = {
@@ -51,6 +52,7 @@ const JobFilters: React.FC<{
         jobType: '🛠️ 工作类型',
         positionType: '🧑‍💼 职位类型',
         companyType: '🏷️ 公司类型',
+        companyName: '🏢 公司名称',
     };
 
     const handleCheckboxChange = (event: CheckboxChangeEvent, name: FilterKey) => {
@@ -90,7 +92,7 @@ const JobFilters: React.FC<{
                     ))}
                 </Form.Item>
             ))}
-            <Form.Item label="🏢 公司名称">
+            <Form.Item label={filterLabels['companyName']}>
                 <Input
                     value={filters['companyName']}
                     onChange={handleTextFieldChange}

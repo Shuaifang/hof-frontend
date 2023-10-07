@@ -1,10 +1,8 @@
-// JobList.tsx
 'use client';
 import React, { useState } from 'react';
-import { Button, Checkbox, Form, Input, Table, Row, Col, Popover, Menu } from 'antd';
+import { Button, Checkbox, Form, Input, Table, Row, Col, Popover } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Icons from './Icons';
-import { useConfig } from '@/contexts/GlobalContext';  // 确保路径正确
 
 interface Job {
     id: string;
@@ -22,50 +20,39 @@ interface Filters {
     jobType: string[];
     positionType: string[];
     companyType: string[];
+    // excludeType: string[];
     companyName: string;
 }
 
-type FilterOption = {
-    key: string;
-    name: string;
-};
-
-type FilterKey = Exclude<keyof Filters, 'companyName'>;
+// 模拟的职位数据
+const mockJobsData: Job[] = [
+    {
+        id: '1',
+        title: "Software Engineering Intern",
+        company: "Carrier",
+        date: "2023-10-01",
+        location: "美国",
+        jobType: "SDE",
+        positionType: "Intern",
+        feedback: "职位反馈",
+    },
+    // ...其他职位数据
+];
 
 const JobFilters: React.FC<{
     filters: Filters;
     onFilterChange: (name: string, value: any) => void;
     onClearFilters: () => void;
 }> = ({ filters, onFilterChange, onClearFilters }) => {
-    const { state: { data: configData } } = useConfig();
 
-    const filterOptions: Record<FilterKey, FilterOption[]> = {
-        region: configData?.nation?.infoList || [],
-        jobType: configData?.type?.infoList || [],
-        positionType: configData?.target_group?.infoList || [],
-        companyType: ['Facebook', 'Linkedin', 'Amazon', 'Apple', 'Netflix', 'Google', 'Microsoft'].map(tem => ({ name: tem, key: tem })),
-    };
-
-    const filterLabels: Record<FilterKey, string> = {
-        region: '🌍 地区',
-        jobType: '🛠️ 工作类型',
-        positionType: '🧑‍💼 职位类型',
-        companyType: '🏷️ 公司类型',
-    };
-
-    const handleCheckboxChange = (event: CheckboxChangeEvent, name: FilterKey) => {
-        const value = event.target.value.key;
+    const handleCheckboxChange = (event: CheckboxChangeEvent, name: keyof Omit<Filters, 'companyName'>) => {
+        const value = event.target.value;
         const currentValues = filters[name];
         let newValues;
         if (event.target.checked) {
             newValues = [...currentValues, value];
         } else {
-            if (typeof currentValues !== 'string') {
-                newValues = currentValues.filter((item: any) => item !== value);
-            } else {
-                newValues = currentValues
-            }
-
+            newValues = currentValues.filter(item => item !== value);
         }
         onFilterChange(name, newValues);
     };
@@ -74,25 +61,43 @@ const JobFilters: React.FC<{
         onFilterChange(event.target.name, event.target.value);
     };
 
+    type FilterKey = Exclude<keyof Filters, 'companyName'>;
+
+    const filterLabels: Record<FilterKey, string> = {
+        region: '🌍 地区',
+        jobType: '🛠️ 工作类型',
+        positionType: '🧑‍💼 职位类型',
+        companyType: '🏷️ 公司类型',
+        // excludeType: '❌ 排除类型',
+    };
+
+    const filterOptions: Record<FilterKey, string[]> = {
+        region: ['美国', '加拿大', '新加坡', '香港', '其他（开发中）'],
+        jobType: ['SDE', 'MLE', 'DS', 'DE', 'DA', 'Analyst', 'UX/UE', 'UI', 'PM'],
+        positionType: ['New Grad', 'Intern', 'Other'],
+        companyType: ['Facebook', 'Linkedin', 'Amazon', 'Apple', 'Netflix', 'Google', 'Microsoft'],
+        // excludeType: ['职位失效', '无Sponsor', 'US Citizen'],
+    };
+
     return (
         <Form layout="horizontal" labelCol={{ flex: '110px' }} labelAlign="left">
             {Object.keys(filterOptions).map((filterName) => (
                 <Form.Item label={filterLabels[filterName as FilterKey]} key={filterName}>
                     {filterOptions[filterName as FilterKey].map((option) => (
                         <Checkbox
-                            key={option.key}
-                            checked={filters[filterName as FilterKey].includes(option.key)}
+                            key={option}
+                            checked={filters[filterName as FilterKey].includes(option)}
                             onChange={(e) => handleCheckboxChange(e, filterName as FilterKey)}
                             value={option}
                         >
-                            {option.name}
+                            {option}
                         </Checkbox>
                     ))}
                 </Form.Item>
             ))}
             <Form.Item label="🏢 公司名称">
                 <Input
-                    value={filters['companyName']}
+                    value={filters.companyName}
                     onChange={handleTextFieldChange}
                     name="companyName"
                     className='w-[180px] mr-2'
@@ -107,8 +112,11 @@ const JobFilters: React.FC<{
             </Form.Item>
         </Form>
     );
+
+
 };
 
+// 职位表格组件
 const JobsTable: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
     const columns = [
         {
@@ -194,32 +202,28 @@ const JobsTable: React.FC<{ jobs: Job[] }> = ({ jobs }) => {
     );
 };
 
+
+// 主组件
 const JobList: React.FC = () => {
     const [filters, setFilters] = useState<Filters>({
         region: [],
         jobType: [],
         positionType: [],
         companyType: [],
+        // excludeType: [],
         companyName: '',
     });
 
-    const mockJobsData: Job[] = [
-        {
-            id: '1',
-            title: "Software Engineering Intern",
-            company: "Carrier",
-            date: "2023-10-01",
-            location: "美国",
-            jobType: "SDE",
-            positionType: "Intern",
-            feedback: "职位反馈",
-        },
-        // ...其他职位数据
-    ];
-
     const filteredJobs = mockJobsData.filter(job => {
         let isMatch = true;
-        //...你的filter逻辑
+
+        if (filters.region.length > 0 && !filters.region.includes(job.location)) isMatch = false;
+        if (filters.jobType.length > 0 && !filters.jobType.includes(job.jobType)) isMatch = false;
+        if (filters.positionType.length > 0 && !filters.positionType.includes(job.positionType)) isMatch = false;
+        if (filters.companyType.length > 0 && !filters.companyType.includes(job.company)) isMatch = false;
+        // if (filters.excludeType.length > 0 && filters.excludeType.some(type => job.feedback.includes(type))) isMatch = false;
+        if (filters.companyName && !job.company.toLowerCase().includes(filters.companyName.toLowerCase())) isMatch = false;
+
         return isMatch;
     });
 
@@ -233,6 +237,7 @@ const JobList: React.FC = () => {
             jobType: [],
             positionType: [],
             companyType: [],
+            // excludeType: [],
             companyName: '',
         });
     };

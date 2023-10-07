@@ -1,18 +1,12 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { getSession } from 'next-auth/react';
 
-const apiClient: AxiosInstance = axios.create({
+const apiClient = axios.create({
     baseURL: 'http://8.130.131.123',
 });
 
 apiClient.interceptors.request.use(
     config => {
-        // Check if we are running on the client side
-        if (typeof window !== 'undefined') {
-            const token: string | null = localStorage.getItem('token');
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-        }
         config.headers['Content-Type'] = 'application/json';
         return config;
     },
@@ -26,4 +20,19 @@ apiClient.interceptors.response.use(
     (error) => Promise.reject(error)
 );
 
-export default apiClient;
+const apiWithAuth = async (config: AxiosRequestConfig) => {
+    const session:any= await getSession();
+    
+    // const token = session?.token?.token ?? '';
+    // config.params.token = token;
+    return apiClient({
+        ...config,
+        headers: {
+            ...config.headers,
+            // token
+            // Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+export { apiClient, apiWithAuth };
