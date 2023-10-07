@@ -11,7 +11,7 @@ import ThemeProvider from '@/components/ThemeProvider';
 import { SessionProvider } from 'next-auth/react';
 import { ConfigProvider } from '@/contexts/GlobalContext';
 
-export const config = { ssr: false };
+// export const config = { ssr: false };
 export default function RootLayout(params: any) {
   if (!params) {
     return null;
