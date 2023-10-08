@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { getSession } from 'next-auth/react';
 
 const apiClient = axios.create({
-    baseURL: 'http://haooffer.minnzee.fun/',
+    baseURL: 'https://haooffer.minnzee.fun/',
 });
 
 apiClient.interceptors.request.use(
