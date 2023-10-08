@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { JobRequest } from './types';
-import { useConfig } from '@/contexts/GlobalContext';  // 确保路径正确
+import { useConfig } from '@/contexts/GlobalContext';
 
 interface JobFiltersProps {
     filters: JobRequest;
     onFilterChange: (name: string, value: any) => void;
     onClearFilters: () => void;
+    showCompanyName?: boolean;  // 新增的 prop 来控制是否展示公司名称
 }
 
-const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClearFilters }) => {
+const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClearFilters, showCompanyName = true }) => {
     const { state: { data: configData } } = useConfig();
 
     const handleCheckboxChange = (event: any, name: string) => {
@@ -24,11 +25,6 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
         onFilterChange(name, newValues);
     };
 
-    // const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     onFilterChange(event.target.name, event.target.value);
-    // };
-
-    // 配置你的筛选选项，这里你可能需要根据实际情况调整选项值
     const filterOptions = {
         nation: configData?.nation?.infoList || [],
         type: configData?.type?.infoList || [],
@@ -45,22 +41,18 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
     };
 
     const [localCompanyName, setLocalCompanyName] = useState<string>(filters.companyName || '');
-
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLocalCompanyName(event.target.value);
-
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
-
         timeoutRef.current = setTimeout(() => {
             onFilterChange(event.target.name, event.target.value);
         }, 500);
     };
 
-    // 在组件卸载或者其他filter变化时清除定时器
     useEffect(() => {
         return () => {
             if (timeoutRef.current) {
@@ -85,24 +77,23 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
                     ))}
                 </Form.Item>
             ))}
-            <Form.Item label={filterLabels.companyName}>
-                <Input
-                    value={localCompanyName}  // 使用本地状态
-                    onChange={handleTextFieldChange}
-                    name="companyName"
-                    className='w-[180px] mr-2'
-                    placeholder='请输入公司名称搜索'
-                />
-                {/* <Button type="primary" onClick={onClearFilters} className='mr-2'>
-                    搜索
-                </Button> */}
-                <Button type="primary" onClick={()=>{
-                    setLocalCompanyName('');
-                    onClearFilters()
-                }}>
-                    重置筛选
-                </Button>
-            </Form.Item>
+            {showCompanyName && (
+                <Form.Item label={filterLabels.companyName}>
+                    <Input
+                        value={localCompanyName}
+                        onChange={handleTextFieldChange}
+                        name="companyName"
+                        className='w-[180px] mr-2'
+                        placeholder='请输入公司名称搜索'
+                    />
+                    <Button type="primary" onClick={()=>{
+                        setLocalCompanyName('');
+                        onClearFilters()
+                    }}>
+                        重置筛选
+                    </Button>
+                </Form.Item>
+            )}
         </Form>
     );
 };

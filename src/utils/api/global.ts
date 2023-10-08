@@ -32,7 +32,7 @@ export const fetchConfig = async () => {
 export const fetchJobsListData = async (data: any) => {
   try {
     const response = await apiWithAuth({
-      url: '/job/list',
+      url: '/user/jobList',
       method: 'get',
       params: data
     });

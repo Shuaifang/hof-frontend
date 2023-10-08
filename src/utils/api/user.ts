@@ -12,7 +12,7 @@ export const loginGoogle = async (data: any) => {
 
 export const setJobFeedback = async (data: any) => {
   try {
-    const response = await apiClient({
+    const response = await apiWithAuth({
       method: 'post',
       url: '/job/feedback',
       params: data
@@ -26,9 +26,36 @@ export const setJobFeedback = async (data: any) => {
 
 export const setApplyJob = async (data: any) => {
   try {
-    const response = await apiClient({
+    const response = await apiWithAuth({
       method: 'get',
       url: '/job/apply',
+      params: data
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const getUserAlert = async (data: any) => {
+  try {
+    const response = await apiWithAuth({
+      method: 'get',
+      url: '/user/jobAlertConfig',
+      params: data
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const setUserAlert = async (data: any) => {
+  try {
+    const response = await apiWithAuth({
+      method: 'get',
+      url: '/user/setJobAlertConfig',
       params: data
     });
     return response.data;

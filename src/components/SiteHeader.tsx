@@ -1,11 +1,15 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Icons from './Icons';
 import { MainNav } from './MainNav';
 import ThemeToggle from './ThemeToggle';
+import Link from 'next/link';
+
 import { Button, Avatar, Menu, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
+
+import SubscriptionModal from './JobListNew/SubscribeJobModal';
 
 
 export const config = { ssr: false };
@@ -13,16 +17,16 @@ export const config = { ssr: false };
 export function SiteHeader() {
   const { data: session } = useSession();
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const items: MenuProps['items'] = [
     {
       key: '1',
       label: (
-        <span>个人中心</span>
-      ),
-      onClick: () => {
-        console.log('toCenter')
-      }
+        <Link href="/profile" legacyBehavior>
+          <a>个人中心</a>
+        </Link>
+      )
     },
     {
       key: '2',
@@ -42,7 +46,19 @@ export function SiteHeader() {
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
             {/* <ThemeToggle /> */}
-            
+            <Button
+              type="primary"
+              style={{
+                background: '#fff',
+                color: '#000'
+              }}
+              shape="round"
+              onClick={() => {
+                setIsModalVisible(true)
+              }}
+            >
+              🔔 Job Alert
+            </Button>
             {session?.user ? (
               <>
                 <Dropdown menu={{ items }} trigger={['hover']}>
@@ -67,6 +83,9 @@ export function SiteHeader() {
           </nav>
         </div>
       </div>
+
+      <SubscriptionModal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} />
+
     </header>
   );
 }

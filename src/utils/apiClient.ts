@@ -24,14 +24,15 @@ const apiWithAuth = async (config: AxiosRequestConfig) => {
     const session:any= await getSession();
     
     const token = session?.token?.token ?? '';
-    // config.params.token = token;
+    if(!config.params) config.params = {};
+    config.params.token = token;
     return apiClient({
         ...config,
-        headers: {
-            ...config.headers,
-            // token
-            Authorization: `Bearer ${token}`,
-        },
+        // headers: {
+            // ...config.headers,
+            // Token: token
+            // Authorization: `Bearer ${token}`,
+        // },
     });
 };
 
