@@ -23,14 +23,14 @@ apiClient.interceptors.response.use(
 const apiWithAuth = async (config: AxiosRequestConfig) => {
     const session:any= await getSession();
     
-    // const token = session?.token?.token ?? '';
+    const token = session?.token?.token ?? '';
     // config.params.token = token;
     return apiClient({
         ...config,
         headers: {
             ...config.headers,
             // token
-            // Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     });
 };

@@ -15,8 +15,8 @@ export type ProviderProps = PropsWithChildren<{
 }>;
 
 export function AntdConfigProvider({ children, locale }: ProviderProps) {
-  const { theme: nowTheme } = useTheme();
-
+  let { theme: nowTheme } = useTheme();
+  nowTheme = 'light';
   return (
     <ConfigProvider
       locale={(languages as any)[(locale as any) ?? defaultLocale].antd}
