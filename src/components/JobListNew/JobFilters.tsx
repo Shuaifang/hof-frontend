@@ -7,10 +7,11 @@ interface JobFiltersProps {
     filters: JobRequest;
     onFilterChange: (name: string, value: any) => void;
     onClearFilters: () => void;
-    showCompanyName?: boolean;  // 新增的 prop 来控制是否展示公司名称
+    showCompanyName?: boolean;
+    isApply?: boolean;
 }
 
-const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClearFilters, showCompanyName = true }) => {
+const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClearFilters, showCompanyName = true, isApply = false }) => {
     const { state: { data: configData } } = useConfig();
 
     const handleCheckboxChange = (event: any, name: string) => {
@@ -30,6 +31,16 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
         type: configData?.type?.infoList || [],
         targetGroup: configData?.target_group?.infoList || [],
         publishCompany: ['Facebook', 'Linkedin', 'Amazon', 'Apple', 'Netflix', 'Google', 'Microsoft'].map(name => ({ name, key: name })),
+        status: [
+            'Applied',
+            'Referred',
+            'Recruiter',
+            'OA',
+            'Phone Interview',
+            'Onsite',
+            'Offered',
+            'Rejecte',
+        ].map(name => ({ name, key: name }))
     };
 
     const filterLabels = {
@@ -38,6 +49,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
         type: '🛠️ 工作类型',
         targetGroup: '🧑‍💼 职位类型',
         publishCompany: '🏷️ 公司类型',
+        status: '💡 状态'
     };
 
     const [localCompanyName, setLocalCompanyName] = useState<string>(filters.companyName || '');
@@ -63,7 +75,10 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
 
     return (
         <Form layout="horizontal" labelCol={{ flex: '110px' }} labelAlign="left">
-            {Object.keys(filterOptions).map(filterName => (
+            {Object.keys(filterOptions).filter(tem => {
+                if (isApply) return tem === 'status'
+                return tem !== 'status'
+            }).map(filterName => (
                 <Form.Item label={filterLabels[filterName as keyof typeof filterOptions]} key={filterName}>
                     {filterOptions[filterName as keyof typeof filterOptions].map(option => (
                         <Checkbox
@@ -86,7 +101,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
                         className='w-[180px] mr-2'
                         placeholder='请输入公司名称搜索'
                     />
-                    <Button type="primary" onClick={()=>{
+                    <Button type="primary" onClick={() => {
                         setLocalCompanyName('');
                         onClearFilters()
                     }}>

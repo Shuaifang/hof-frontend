@@ -63,3 +63,16 @@ export const setUserAlert = async (data: any) => {
     throw error;
   }
 };
+
+export const setUserJobStatus = async (data: any) => {
+  try {
+    const response = await apiWithAuth({
+      method: 'get',
+      url: '/user/setJobApply',
+      params: data
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -3,10 +3,11 @@ import { Row, Col } from 'antd';
 import JobFilters from './JobFilters';
 import JobsTable from './JobsTable';
 import { JobRequest, Job, PageInfo } from './types';
-import { fetchJobsListData } from '@/utils/api/global';
+import { fetchJobsListData, fetchUserJobsListData } from '@/utils/api/global';
 
 // 主组件
-const JobList: React.FC = () => {
+const JobList: React.FC = (props: any) => {
+    const { isApply } = props;
     const [filters, setFilters] = useState<JobRequest>({
         companyName: '',
         limit: '10',
@@ -16,6 +17,7 @@ const JobList: React.FC = () => {
         publishCompany: '',
         targetGroup: '',
         type: '',
+        status: ''
     });
 
     const [jobs, setJobs] = useState<Job[]>([]);
@@ -35,7 +37,8 @@ const JobList: React.FC = () => {
     const fetchJobsList = async (params: JobRequest) => {
         setLoading(true);
         try {
-            const response = await fetchJobsListData(params);
+            let fn = isApply ? fetchUserJobsListData : fetchJobsListData;
+            const response = await fn(params);
             const fetchedJobs = response.data.data.jobList;
             setJobs(fetchedJobs);
             setPageInfo(response.data.data.pageInfo); // 更新分页信息
@@ -65,6 +68,7 @@ const JobList: React.FC = () => {
             publishCompany: '',
             targetGroup: '',
             type: '',
+            status: ''
         });
     };
 
@@ -72,6 +76,7 @@ const JobList: React.FC = () => {
         <Row gutter={[16, 16]}>
             <Col span={24}>
                 <JobFilters
+                    isApply={isApply}
                     filters={filters}
                     onFilterChange={handleFilterChange}
                     onClearFilters={handleClearFilters}
@@ -79,6 +84,7 @@ const JobList: React.FC = () => {
             </Col>
             <Col span={24}>
                 <JobsTable
+                    isApply={isApply}
                     // @ts-ignore
                     jobs={jobs}
                     loading={loading}

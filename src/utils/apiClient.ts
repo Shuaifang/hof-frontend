@@ -21,17 +21,24 @@ apiClient.interceptors.response.use(
 );
 
 const apiWithAuth = async (config: AxiosRequestConfig) => {
-    const session:any= await getSession();
-    
-    const token = session?.token?.token ?? '';
-    if(!config.params) config.params = {};
+    let localToken = sessionStorage.getItem("token");
+    let token = null;
+    if (localToken) {
+        token = localToken;
+    } else {
+        const session: any = await getSession();
+        token = session?.token?.token ?? '';
+        sessionStorage.setItem("token", token)
+    }
+
+    if (!config.params) config.params = {};
     config.params.token = token;
     return apiClient({
         ...config,
         // headers: {
-            // ...config.headers,
-            // Token: token
-            // Authorization: `Bearer ${token}`,
+        // ...config.headers,
+        // Token: token
+        // Authorization: `Bearer ${token}`,
         // },
     });
 };
