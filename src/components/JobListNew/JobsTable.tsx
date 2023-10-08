@@ -212,7 +212,7 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       render: (text: string, item: any) => {
         return (
           <DatePicker format="" defaultValue={dayjs(text, 'YYYY-MM-DD')} onChange={e => {
-            updateApplyStatue({ id: item.id, content: e?.format("YYYY-MM-DD") })
+            updateApplyStatue({ id: item.id, type: 'date', content: e?.format("YYYY-MM-DD") })
           }} />
         )
       }
@@ -225,7 +225,7 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
         return (
           <Dropdown menu={{
             items: statusOptions, onClick: e => {
-              updateApplyStatue({ id: item.id, type: e.key })
+              updateApplyStatue({ id: item.id, type: 'apply_statusc', ontent: e.key })
             }
           }}>
             <Button type='default' className='w-[140px]'>
