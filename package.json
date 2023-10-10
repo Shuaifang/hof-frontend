@@ -11,6 +11,7 @@
     "check": "prettier --check \"**/*.{js,ts,tsx,mdx}\" --cache"
   },
   "dependencies": {
+    "@ant-design/charts": "^1.4.2",
     "@ant-design/cssinjs": "^1.10.1",
     "@ant-design/icons": "^5.2.6",
     "antd": "^5.9.4",
@@ -28,9 +29,9 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@types/axios": "^0.14.0",
     "@types/node": "18.13.0",
     "@types/react": "18.0.27",
-    "@types/axios": "^0.14.0",
     "autoprefixer": "^10.4.14",
     "eslint": "7.32.0",
     "eslint-config-next": "13.1.6",

@@ -1,11 +1,11 @@
+// @ts-nocheck
 'use client';
 import ADRow from '@/components/ADRow';
 import JobList from '@/components/JobListNew/JobList';
 import React from 'react';
 
-
 const JobsPage = (props: any) => {
-  const { searchParams: { pageId } } = props;
+  const { searchParams: { pageId, infoId } } = props;
   return (
 
     <div className="mainContainer">
@@ -20,7 +20,7 @@ const JobsPage = (props: any) => {
         <strong className='text-xl text-[#444444] block'>2022年共收录 SDE NG职位775个</strong>
         <strong className='text-xl text-[#444444] block'>建议：找NG的同学，Entry-Level也可一起投递</strong>
       </div>
-      <JobList />
+      <JobList showCahrt={true} showOnline={true} infoId={infoId} />
     </div>
 
 

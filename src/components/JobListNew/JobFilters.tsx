@@ -13,7 +13,7 @@ interface JobFiltersProps {
 
 const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClearFilters, showCompanyName = true, isApply = false }) => {
     const { state: { data: configData } } = useConfig();
-
+    // console.log('filters',filters)
     const handleCheckboxChange = (event: any, name: string) => {
         const value = event.target.value;
         const currentValues = filters[name as keyof JobRequest] as string[];

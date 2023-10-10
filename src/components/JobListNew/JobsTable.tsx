@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { Table, Popover, Button, message, Dropdown, Space, DatePicker } from 'antd';
+import { Table, Popover, Button, message, Dropdown, Tag, DatePicker } from 'antd';
 import type { MenuProps } from 'antd';
 import type { DatePickerProps } from 'antd';
 
@@ -81,6 +81,24 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       title: '💼 职位名称',
       dataIndex: 'job',
       key: 'job',
+      render: (text: string, item: any) => {
+        item.job_feedback = item.job_feedback || []
+        return (
+          <>
+            <Button type='link' href={item.job_link} target='_blank'>{text}</Button>
+            {
+              item.job_feedback.length &&
+              <>
+                <br />
+                <div className='inline mr-[15px]'></div>
+                {item.job_feedback.includes('无Sponsor') && <Tag color='#6CB57A'>无Sponsor</Tag>}
+                {item.job_feedback.includes('US Citizen') && <Tag color='#ff9933'>US Citizen</Tag>}
+                {item.job_feedback.includes('职位失效') && <Tag color='#BBBBBB'>职位失效</Tag>}
+              </>
+            }
+          </>
+        )
+      }
     },
     {
       title: '🏢 公司名字',
@@ -184,6 +202,14 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       title: '💼 职位名称',
       dataIndex: 'job',
       key: 'job',
+      render: (text: string, item: any) => {
+        return (
+          <>
+            <a href={item.job_link} target='_blank'>{text}</a>
+          </>
+        )
+      }
+      // job_feedback
     },
     {
       title: '🏢 公司名字',
