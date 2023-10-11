@@ -36,18 +36,25 @@ apiClient.interceptors.response.use(
 );
 
 const apiWithAuth = async (config: AxiosRequestConfig) => {
-    let localToken = sessionStorage.getItem("token");
-    let token = null;
-    if (localToken) {
-        token = localToken;
-    } else {
-        const session: any = await getSession();
-        token = session?.token?.token ?? '';
-        sessionStorage.setItem("token", token)
+    if (!config.params) config.params = {};
+
+    try {
+        let localToken = sessionStorage.getItem("token");
+        let token = null;
+        if (localToken) {
+            token = localToken;
+        } else {
+            const session: any = await getSession();
+            token = session?.token?.token ?? '';
+            sessionStorage.setItem("token", token)
+        }
+        config.params.token = token;
+    } catch (error) {
+        console.log(error)
     }
 
-    if (!config.params) config.params = {};
-    config.params.token = token;
+
+
     config.params = convertKeysToSnakeCase(config.params)
     return apiClient({
         ...config,
