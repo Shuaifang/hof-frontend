@@ -17,7 +17,7 @@ function convertKeysToSnakeCase(obj: Record<string, any>): Record<string, any> {
 
 
 const apiClient = axios.create({
-    baseURL: 'http://8.130.131.123',
+    baseURL: 'https://haooffer.minnzee.fun',
 });
 
 apiClient.interceptors.request.use(

@@ -79,11 +79,11 @@ export function MainNav() {
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-bold text-slate-600 hover:text-slate-900 dark:text-slate-100"
+                className="font-bold text-slate-600 hover:text-slate-900 dark:text-slate-100 flex items-center"
               >
                 {item.title}
               </a>
-              : <Link key={index} href={item.href} className="font-bold text-slate-600 hover:text-slate-900 dark:text-slate-100">
+              : <Link key={index} href={item.href} className="font-bold text-slate-600 hover:text-slate-900 dark:text-slate-100 flex items-center">
                 {item.title}
               </Link>
             : <Dropdown key={index} overlay={(
@@ -102,8 +102,8 @@ export function MainNav() {
                 ))}
               </Menu>
             )}>
-              <a className="font-bold text-slate-600 hover:text-slate-900 dark:text-slate-100 cursor-pointer">
-                {item.title}
+              <a className="font-bold text-slate-600 hover:text-slate-900 dark:text-slate-100 cursor-pointer flex items-center">
+                {item.title} <Icons.ChevronDown />
               </a>
             </Dropdown>
         ))}
