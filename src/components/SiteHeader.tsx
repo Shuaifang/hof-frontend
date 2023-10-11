@@ -17,7 +17,7 @@ export const config = { ssr: false };
 
 export function SiteHeader() {
   const { data: session } = useSession();
-
+  console.log(session)
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const items: MenuProps['items'] = [
@@ -63,7 +63,7 @@ export function SiteHeader() {
             {session?.user ? (
               <>
                 <Dropdown menu={{ items }} trigger={['hover']}>
-                  <Avatar size={40} src={<img src='https://lh3.googleusercontent.com/a/ACg8ocLPeXuzjAt6UTFMmZgCwIi_HMHo-GqAfBJlx3fqkgbojm0=s96-c' />}>{session?.user?.name?.[0]}</Avatar>
+                  <Avatar size={40} src={session?.user?.image ? <img src={session?.user?.image} /> : ''}>{session?.user?.name?.[0]}</Avatar>
                 </Dropdown>
               </>
             ) : (
