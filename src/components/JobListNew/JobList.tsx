@@ -48,21 +48,25 @@ const JobList: React.FC = (props: any) => {
             const fetchedJobs = response.data.data.jobList;
             let { selectInfo, jobDateTable, pageInfo } = response.data.data;
             emitData && emitData(response.data.data);
-            if (flag === 0) {
-                if (selectInfo) {
-                    let copyFilters = { ...filters }
-                    selectInfo = convertKeysToCamelCase(selectInfo);
-                    // console.log('selectInfo', selectInfo)
-                    for (let key in selectInfo) {
-                        if (selectInfo[key]) copyFilters[key] = selectInfo[key];
+            try {
+                if (flag === 0) {
+                    if (selectInfo) {
+                        let copyFilters = { ...filters }
+                        selectInfo = convertKeysToCamelCase(selectInfo);
+                        // console.log('selectInfo', selectInfo)
+                        for (let key in selectInfo) {
+                            if (selectInfo[key]) copyFilters[key] = selectInfo[key];
+                        }
+                        // console.log('copyFilters', copyFilters)
+                        setFilters(copyFilters);
+                        return;
+                    } else {
+                        // console.log('flag+1', flag, flag + 1)
+                        setFlag(flag + 1);
                     }
-                    // console.log('copyFilters', copyFilters)
-                    setFilters(copyFilters);
-                    return;
-                } else {
-                    // console.log('flag+1', flag, flag + 1)
-                    setFlag(flag + 1);
                 }
+            } catch (error) {
+                console.log('err', error)
             }
 
             setChartData(jobDateTable)
@@ -81,7 +85,7 @@ const JobList: React.FC = (props: any) => {
         if (flag !== 1) {
             fetchJobsList(filters);
         }
-        // console.log('flag+1 use', flag, flag + 1)
+        console.log('flag+1 use', flag, flag + 1)
         setFlag(flag + 1);
 
     }, [filters]);
