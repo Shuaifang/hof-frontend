@@ -98,10 +98,10 @@ export function SiteHeader() {
                 }}
                 shape="round"
                 onClick={() => {
-                  signInWithGooglePopup()
-                  // signIn("google", undefined, {
-                  //   prompt: 'select_account',
-                  // })
+                  // signInWithGooglePopup()
+                  signIn("google", undefined, {
+                    prompt: 'select_account',
+                  })
                 }}
               >
                 Google Login

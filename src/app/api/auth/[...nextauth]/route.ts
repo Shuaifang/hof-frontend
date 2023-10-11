@@ -14,6 +14,9 @@ const authOptions = {
   ],
   debug: true,
   secret: 'AIzaSyARmQSZBV8bKzPgTDv2fhZ5XTnJArJm-B8',
+  // pages: {
+  //   signIn: '/api/auth/signin', // 设置登录页面的路径
+  // },
   callbacks: {
     // @ts-ignore
     async signIn({ user, account, profile }) {
