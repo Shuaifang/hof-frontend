@@ -14,6 +14,30 @@ import SubscriptionModal from './JobListNew/SubscribeJobModal';
 
 export const config = { ssr: false };
 
+function signInWithGooglePopup() {
+  const googleLoginWindow = window.open(
+    '/api/auth/signin/google', // 此 URL 应该指向 NextAuth 的 Google 登录路由
+    '_blank',
+    'width=500,height=800'
+  );
+
+  const checkLoginStatus = setInterval(() => {
+    if (googleLoginWindow?.closed) {
+      clearInterval(checkLoginStatus);
+      // 检查用户是否在弹出窗口中登录
+      fetch('/api/auth/session')
+        .then(res => res.json())
+        .then(session => {
+          console.log('session', session)
+          if (session.user) {
+            // 用户已登录，可以进行页面重定向或其他操作
+            location.reload();
+          }
+        });
+    }
+  }, 500);
+}
+
 export function SiteHeader() {
   const { data: session } = useSession();
 
@@ -73,9 +97,12 @@ export function SiteHeader() {
                   background: '#000',
                 }}
                 shape="round"
-                onClick={() => signIn("google", undefined, {
-                  prompt: 'select_account',
-                })}
+                onClick={() => {
+                  signInWithGooglePopup()
+                  // signIn("google", undefined, {
+                  //   prompt: 'select_account',
+                  // })
+                }}
               >
                 Google Login
               </Button>

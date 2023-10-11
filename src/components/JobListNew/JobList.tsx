@@ -82,10 +82,10 @@ const JobList: React.FC = (props: any) => {
     // 使用useEffect在组件加载和filters变化时调用API
     useEffect(() => {
 
-        if (flag !== 1) {
-            fetchJobsList(filters);
-        }
-        console.log('flag+1 use', flag, flag + 1)
+        // if (flag !== 1) {
+        fetchJobsList(filters);
+        // }
+        // console.log('flag+1 use', flag, flag + 1)
         setFlag(flag + 1);
 
     }, [filters]);
