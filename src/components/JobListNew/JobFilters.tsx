@@ -44,10 +44,15 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
             if (tem.key === 'FI') tem.name = '🇫🇮 FI'; // Finland
             if (tem.key === 'PL') tem.name = '🇵🇱 PL'; // Poland
             return tem;
-        }) || [],        
+        }) || [],
         type: configData?.type?.infoList || [],
         targetGroup: configData?.target_group?.infoList || [],
         publishCompany: ['Facebook', 'Linkedin', 'Amazon', 'Apple', 'Netflix', 'Google', 'Microsoft'].map(name => ({ name, key: name })),
+        noFeedback: [
+            { name: 'Closed', key: 'Closed' },
+            { name: 'No-Sponsor', key: 'No-Sponsor' },
+            { name: 'US Citizen Only', key: 'US Citizen' },
+        ],
         status: [
             'Applied',
             'Referred',
@@ -66,6 +71,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
         type: '🛠️ Role',
         targetGroup: '🧑‍💻 Type',
         publishCompany: '🚀 BigTech',
+        noFeedback: 'noFeedback',
         status: '💡 Status'
     };
 

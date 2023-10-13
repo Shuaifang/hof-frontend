@@ -114,7 +114,7 @@ const JobList: React.FC = (props: any) => {
             publishCompany: '',
             targetGroup: '',
             type: '',
-            status: ''
+            status: '',
         });
     };
 

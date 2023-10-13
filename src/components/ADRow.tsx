@@ -34,10 +34,10 @@ const AdBanner = ({ imageUrl, link, position }) => {
         backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        width: '300px',
-        height: '400px',
+        width: '240px',
+        height: '300px',
         top: '50%',
-        marginTop: '-200px'
+        marginTop: '-150px'
     };
     bannerStyle[position] = '0'
 
@@ -154,12 +154,11 @@ const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
         {/* 在页面左侧和右侧固定的对联广告，如果有image的话，如果同时有link点击会打开新页面 */}
         {/* left */}
         {
-            data.left.image && < AdBanner imageUrl={data.left.image} link={data.left.link} position='left' />
+            data.left.image && <AdBanner imageUrl={data.left.image} link={data.left.link} position='left' />
         }
         {/* right */}
         {
-            data.right.image &&
-            <AdBanner imageUrl={data.right.image} link={data.right.link} position='right' />
+            data.right.image && <AdBanner imageUrl={data.right.image} link={data.right.link} position='right' />
             // </div>
         }
     </>;
