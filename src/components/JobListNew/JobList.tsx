@@ -16,7 +16,7 @@ const JobList: React.FC = (props: any) => {
     const { isApply, emitData } = props;
     const [filters, setFilters] = useState<JobRequest>({
         companyName: '',
-        limit: '10',
+        limit: '20',
         nation: '',
         noFeedback: '',
         page: '1',
@@ -31,7 +31,7 @@ const JobList: React.FC = (props: any) => {
 
     const [pageInfo, setPageInfo] = useState<PageInfo>({
         count: 0,
-        limit: '10',
+        limit: '20',
         page: '1',
     });
     const [loading, setLoading] = useState<boolean>(false);
@@ -107,7 +107,7 @@ const JobList: React.FC = (props: any) => {
     const handleClearFilters = () => {
         setFilters({
             companyName: '',
-            limit: '10',
+            limit: '20',
             nation: '',
             noFeedback: '',
             page: '1',

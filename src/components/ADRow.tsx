@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { fetchIntro } from '@/utils/api/global';
 
@@ -17,11 +18,48 @@ interface Section {
 interface Config {
     firstSection: Section;
     otherSections: Section[];
+    left: {
+        image: string,
+        link: string
+    }
+    right: {
+        image: string,
+        link: string
+    }
 }
+
+const AdBanner = ({ imageUrl, link, position }) => {
+    const bannerStyle = {
+        backgroundImage: `url(${imageUrl})`,
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        width: '300px',
+        height: '400px',
+        top: '50%',
+        marginTop: '-200px'
+    };
+    bannerStyle[position] = '0'
+
+    const renderImage = (position) => (
+        <div
+            className="cursor-pointer z-[999] bg-center bg-no-repeat fixed "
+            style={bannerStyle}
+            onClick={() => link && window.open(link, '_blank')}
+        ></div>
+    );
+
+    return (
+        <>
+            {renderImage(position)}
+        </>
+    );
+};
+
 
 const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
     const [data, setData] = useState<Config | null>(null);
-    
+    console.log('data', data)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -43,7 +81,9 @@ const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
                             listItems: good.list.map(item => item.name),
                             footerText: good.intro_text,
                             specialNote: good.remark
-                        }))
+                        })),
+                        left: response.data.left,
+                        right: response.data.right,
                     };
                     setData(transformedData);
                 } else {
@@ -60,7 +100,8 @@ const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
         return <div></div>;
     }
 
-    return (
+    return <>
+        (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 bg-[#f5f5f7] p-[10px]">
             <div className="w-full">
                 <h2 className="text-lg font-bold">{data.firstSection.title}</h2>
@@ -108,7 +149,20 @@ const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
                 </div>
             ))}
         </div>
-    );
+        )
+
+        {/* 在页面左侧和右侧固定的对联广告，如果有image的话，如果同时有link点击会打开新页面 */}
+        {/* left */}
+        {
+            data.left.image && < AdBanner imageUrl={data.left.image} link={data.left.link} position='left' />
+        }
+        {/* right */}
+        {
+            data.right.image &&
+            <AdBanner imageUrl={data.right.image} link={data.right.link} position='right' />
+            // </div>
+        }
+    </>;
 }
 
 
