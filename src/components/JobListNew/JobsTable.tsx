@@ -260,22 +260,22 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       }
     },
     {
-      title: '📍 地区',
+      title: '📍 Loc',
       dataIndex: 'nation',
       key: 'nation',
     },
     {
-      title: '👥 岗位类型',
+      title: '👥 Role',
       dataIndex: 'type',
       key: 'type',
     },
     {
-      title: '📦 职位类型',
+      title: '📦 Type',
       dataIndex: 'target_group',
       key: 'target_group',
     },
     {
-      title: '📅 日期',
+      title: '📅 Date',
       dataIndex: 'date',
       key: 'date',
       render: (text: string, item: any) => {
@@ -287,7 +287,7 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       }
     },
     {
-      title: '💡 状态',
+      title: '💡 Status',
       dataIndex: 'status',
       key: 'status',
       render: (text: string, item: any) => {
