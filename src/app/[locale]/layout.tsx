@@ -29,7 +29,7 @@ export default function RootLayout(params: any) {
     nav: { home: '首页' },
     theme: { light: '亮色', dark: '暗色', system: '系统' }
   };
-  const locale = 'zh-CN'
+  const locale = 'en-US'
   console.log('locale', locale)
 
   return (
@@ -43,7 +43,7 @@ export default function RootLayout(params: any) {
                 <SiteHeader />
                 <main>{children}</main>
                 <footer className='text-center font-bold text-[#444] my-[15px]'>
-                  Copyright © 2022 Hao Offer  保留所有权利。
+                  Copyright©2022-2023  haooffer.net All rights reserved
                   <div className='h-[30px]'></div>
                 </footer>
               </ThemeProvider>

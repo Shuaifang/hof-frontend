@@ -32,7 +32,7 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       messageApi.warning(
         {
           type: 'warning',
-          content: '请先登录！',
+          content: 'To access this feature, please log in. Your dream job is just a few clicks away! ',
           style: {
             marginTop: '6vh',
           },
@@ -46,7 +46,7 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
     onPageChange(parseInt(pageInfo.page));
     messageApi.open({
       type: 'success',
-      content: '职位申请成功！',
+      content: 'Apply successful！',
       style: {
         marginTop: '6vh',
       },
@@ -60,15 +60,28 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
     'Phone Interview',
     'Onsite',
     'Offered',
-    'Rejecte',
+    'Reject',
   ].map(label => ({ label, key: label }))
 
 
   const updateApplyStatue = async (data: any) => {
+    let loginstatus = await isLoggedIn();
+    if (!loginstatus) {
+      messageApi.warning(
+        {
+          type: 'warning',
+          content: 'To access this feature, please log in. Your dream job is just a few clicks away! ',
+          style: {
+            marginTop: '6vh',
+          },
+        }
+      );
+      return;
+    }
     await setUserJobStatus(data)
     messageApi.open({
       type: 'success',
-      content: '职位状态修改成功！',
+      content: 'Updated job status!',
       style: {
         marginTop: '6vh',
       },
@@ -78,55 +91,62 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
   }
   const columns = [
     {
-      title: '💼 职位名称',
+      title: '💼 Job (Click to apply)',
       dataIndex: 'job',
       key: 'job',
       render: (text: string, item: any) => {
         item.job_feedback = item.job_feedback || []
         return (
           <>
-            <Button type='link' href={item.job_link} target='_blank'>{text}</Button>
+            <a className='block truncate text-left text-[#1677ff]' style={{
+              maxWidth: '300px'
+            }} type='link' href={item.job_link} target='_blank'>
+              <span >{text}</span>
+            </a>
             {
-              item.job_feedback.length &&
-              <>
-                <br />
-                <div className='inline mr-[15px]'></div>
-                {item.job_feedback.includes('无Sponsor') && <Tag color='#6CB57A'>无Sponsor</Tag>}
-                {item.job_feedback.includes('US Citizen') && <Tag color='#ff9933'>US Citizen</Tag>}
-                {item.job_feedback.includes('职位失效') && <Tag color='#BBBBBB'>职位失效</Tag>}
-              </>
+              item.job_feedback.length ?
+                <>
+                  {/* <div className='inline mr-[15px]'></div> */}
+                  {item.job_feedback.includes('No-Sponsor') && <Tag color='#6CB57A'>No-Sponsor</Tag>}
+                  {item.job_feedback.includes('US Citizen') && <Tag color='#ff9933'>US Citizen</Tag>}
+                  {item.job_feedback.includes('Closed') && <Tag color='#BBBBBB'>Closed</Tag>}
+                </>
+                : ''
             }
           </>
         )
       }
     },
     {
-      title: '🏢 公司名字',
+      title: '🏢 Company  ',
       dataIndex: 'company',
       key: 'company',
+      render: (text: string, item: any) => {
+        return <div className='w-[128px] truncate text-left'>{text}</div>
+      }
     },
     {
-      title: '📅 发布日期',
+      title: '📅 Date',
       dataIndex: 'date',
       key: 'date',
     },
     {
-      title: '📍 地区',
+      title: '📍 Loc',
       dataIndex: 'nation',
       key: 'nation',
     },
     {
-      title: '👥 岗位类型',
+      title: '👥 Role',
       dataIndex: 'type',
       key: 'type',
     },
     {
-      title: '📦 职位类型',
+      title: '📦 Type',
       dataIndex: 'target_group',
       key: 'target_group',
     },
     {
-      title: '💬 职位反馈',
+      title: '💬 Job Info Feedback',
       dataIndex: 'job_feedback',
       key: 'job_feedback',
       render: (text: string, item: any) => (
@@ -141,10 +161,10 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
                   borderColor: '#6CB57A' // Slightly darker green for border
                 }}
                 onClick={() => {
-                  feedback(item.id, "无Sponsor")
+                  feedback(item.id, "No-Sponsor")
                 }}
               >
-                无Sponsor
+                No-Sponsor
               </Button>
               <Button
                 size='small'
@@ -167,29 +187,35 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
                   borderColor: '#BBBBBB' // Slightly darker gray for border
                 }}
                 onClick={() => {
-                  feedback(item.id, "职位失效")
+                  feedback(item.id, "Closed")
                 }}
               >
-                职位失效
+                Closed
               </Button>
             </div>
           )}
           title=""
         >
-          <Button type='link'>职位反馈</Button>
+          <Button type='link'>Add #Tag</Button>
         </Popover>
       )
     },
     {
-      title: '🎯 职位申请',
+      title: '🎯 Job apply',
       dataIndex: 'job_feedback',
       key: 'job_feedback',
       render: (text: string, item: any) => {
         return (
           <div className='text-center'>
-            <Button size='small' onClick={() => {
-              switchApply(item.id)
-            }} type={item.is_apply === 1 ? 'primary' : 'default'} icon={<Icons.Check size={16} style={{ marginTop: 3 }} />}></Button>
+            {
+              item.is_apply === 1 ?
+                <Button size='small' className='w-[24px] h-[24px]' type="primary" icon={<Icons.Check size={16} style={{ marginTop: 3 }} />}></Button>
+                :
+                <Button size='small' className='w-[24px] h-[24px]' onClick={() => {
+                  switchApply(item.id)
+                }} type="default"></Button>
+            }
+
           </div>
 
         )
@@ -199,22 +225,39 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
 
   const isApplyColumns = [
     {
-      title: '💼 职位名称',
+      title: '💼 Job (Click to apply)',
       dataIndex: 'job',
       key: 'job',
       render: (text: string, item: any) => {
+        item.job_feedback = item.job_feedback || []
         return (
           <>
-            <a href={item.job_link} target='_blank'>{text}</a>
+            <a className='block truncate text-left text-[#1677ff]' style={{
+              maxWidth: '300px'
+            }} type='link' href={item.job_link} target='_blank'>
+              <span >{text}</span>
+            </a>
+            {
+              item.job_feedback.length ?
+                <>
+                  {/* <div className='inline mr-[15px]'></div> */}
+                  {item.job_feedback.includes('No-Sponsor') && <Tag color='#6CB57A'>No-Sponsor</Tag>}
+                  {item.job_feedback.includes('US Citizen') && <Tag color='#ff9933'>US Citizen</Tag>}
+                  {item.job_feedback.includes('Closed') && <Tag color='#BBBBBB'>Closed</Tag>}
+                </>
+                : ''
+            }
           </>
         )
       }
-      // job_feedback
     },
     {
-      title: '🏢 公司名字',
+      title: '🏢 Company  ',
       dataIndex: 'company',
       key: 'company',
+      render: (text: string, item: any) => {
+        return <div className='w-[128px] truncate text-left'>{text}</div>
+      }
     },
     {
       title: '📍 地区',
@@ -270,7 +313,7 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
     })
     messageApi.open({
       type: 'success',
-      content: '反馈成功，感谢您的反馈！',
+      content: 'Feedback Received, Thank You!',
       style: {
         marginTop: '6vh',
       },

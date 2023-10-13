@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Row, Col } from 'antd';
 import JobFilters from './JobFilters';
 import JobsTable from './JobsTable';
@@ -10,6 +10,9 @@ import { convertKeysToCamelCase } from '@/utils';
 
 // 主组件
 const JobList: React.FC = (props: any) => {
+    const isFirstRender = useRef(true);
+
+    // console.log('infoId', props.infoId)
     const { isApply, emitData } = props;
     const [filters, setFilters] = useState<JobRequest>({
         companyName: '',
@@ -42,29 +45,25 @@ const JobList: React.FC = (props: any) => {
     const fetchJobsList = async (params: JobRequest) => {
         setLoading(true);
         try {
-            console.log('getList', flag)
             let fn = isApply ? fetchUserJobsListData : fetchJobsListData;
             const response = await fn({ ...params, infoId: props.infoId });
             const fetchedJobs = response.data.data.jobList;
             let { selectInfo, jobDateTable, pageInfo } = response.data.data;
             emitData && emitData(response.data.data);
             try {
-                if (flag === 0) {
-                    if (selectInfo) {
-                        let copyFilters = { ...filters }
-                        selectInfo = convertKeysToCamelCase(selectInfo);
-                        // console.log('selectInfo', selectInfo)
-                        for (let key in selectInfo) {
-                            if (selectInfo[key]) copyFilters[key] = selectInfo[key];
-                        }
-                        // console.log('copyFilters', copyFilters)
-                        setFilters(copyFilters);
-                        return;
-                    } else {
-                        // console.log('flag+1', flag, flag + 1)
-                        setFlag(flag + 1);
+
+                if (selectInfo) {
+                    let copyFilters = { ...filters }
+                    selectInfo = convertKeysToCamelCase(selectInfo);
+                    for (let key in selectInfo) {
+                        if (selectInfo[key]) copyFilters[key] = selectInfo[key];
                     }
+                    isFirstRender.current = true;
+                    setFilters(copyFilters);
+                } else {
+                    setFlag(flag + 1);
                 }
+
             } catch (error) {
                 console.log('err', error)
             }
@@ -79,9 +78,18 @@ const JobList: React.FC = (props: any) => {
         }
     };
 
-    // 使用useEffect在组件加载和filters变化时调用API
-    useEffect(() => {
 
+    useEffect(() => {
+        if (isFirstRender.current) {
+            return;
+        }
+        handleClearFilters();
+    }, [props.infoId])
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
         // if (flag !== 1) {
         fetchJobsList(filters);
         // }
@@ -89,9 +97,7 @@ const JobList: React.FC = (props: any) => {
         setFlag(flag + 1);
 
     }, [filters]);
-    // useEffect(() => {
-    //     console.log('flag', flag)
-    // }, [flag])
+
 
     const handleFilterChange = (name: string, value: string[] | string) => {
         setFilters(prev => ({ ...prev, [name]: value }));

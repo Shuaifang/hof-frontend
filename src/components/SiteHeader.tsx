@@ -6,7 +6,7 @@ import { MainNav } from './MainNav';
 import ThemeToggle from './ThemeToggle';
 import Link from 'next/link';
 
-import { Button, Avatar, Menu, Dropdown } from 'antd';
+import { Button, Avatar, Menu, Dropdown, notification } from 'antd';
 import type { MenuProps } from 'antd';
 
 import SubscriptionModal from './JobListNew/SubscribeJobModal';
@@ -17,7 +17,6 @@ export const config = { ssr: false };
 
 export function SiteHeader() {
   const { data: session } = useSession();
-  console.log(session)
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const items: MenuProps['items'] = [
@@ -25,14 +24,14 @@ export function SiteHeader() {
       key: '1',
       label: (
         <Link href="/profile" legacyBehavior>
-          <a>个人中心</a>
+          <a>Dashboard</a>
         </Link>
       )
     },
     {
       key: '2',
       label: (
-        <span>登出</span>
+        <span>LogOut</span>
       ),
       onClick: () => {
         signOut()
@@ -55,7 +54,15 @@ export function SiteHeader() {
               }}
               shape="round"
               onClick={() => {
-                setIsModalVisible(true)
+                if (session?.user) {
+                  setIsModalVisible(true)
+                } else {
+                  notification.warning({
+                    message: 'Please login',
+                    description: 'To access this feature, please log in. Your dream job is just a few clicks away! ',
+                  });
+                }
+
               }}
             >
               🔔 Job Alert

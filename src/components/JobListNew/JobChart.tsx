@@ -21,6 +21,14 @@ const JobChart: React.FC<LineChartProps> = ({ config }) => {
     const defaultConfig = {
         height: 400,
         ...config,
+        slider: {
+            start: 0,
+            end: 1,
+            // height: 50,
+            trendCfg: {
+                smooth: true
+            }
+        },
     };
 
     return <Line {...defaultConfig} />;

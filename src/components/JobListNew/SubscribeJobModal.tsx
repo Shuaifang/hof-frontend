@@ -44,8 +44,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isVisible, onClos
         try {
             await setUserAlert(subscriptionData);
             notification.success({
-                message: '订阅已更新',
-                description: '当您订阅的职位有更新时你将收到推送邮件!',
+                message: 'Change Successful',
+                description: 'Your job alert was created. Your dream job is closer than ever!',
             });
             onClose();
         } catch (error) {
@@ -86,14 +86,14 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isVisible, onClos
             onCancel={onClose}
             footer={[
                 <Button key="back" onClick={onClose}>
-                    取消
+                    Cancel
                 </Button>,
                 <Button key="submit" type="primary" onClick={handleSaveSubscription}>
-                    保存变更
+                    Save Change
                 </Button>,
             ]}
         >
-            <span className='my-[5px]'>当您勾选了任意选项后，您的登录邮箱将会在订阅内容更新时收到相关推送</span>
+            <span className='my-[5px]'>You’ll receive notifications when new jobs are posted that match your preferences.</span>
             <JobFilters
                 filters={filters}
                 onFilterChange={handleFilterChange}

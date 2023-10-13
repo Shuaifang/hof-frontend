@@ -15,10 +15,10 @@ const OnlineCount: React.FC<OnlineCountProps> = ({ jobCount }) => {
 
         // 更新在线用户数量的逻辑
         // const timer = setInterval(() => {
-        const minutesDiff = Math.floor((new Date().getTime() - lastUpdate.getTime()) / 60000); // minutes
-        const min = Math.max(500, onlineUsers - minutesDiff * 10); // 这里你可以调整波动范围
-        const max = Math.min(1000, onlineUsers + minutesDiff * 10);
-        setOnlineUsers(generateRandomNumber(min, max));
+        // const minutesDiff = Math.floor((new Date().getTime() - lastUpdate.getTime()) / 60000); // minutes
+        // const min = Math.max(500, onlineUsers - minutesDiff * 10); // 这里你可以调整波动范围
+        // const max = Math.min(1000, onlineUsers + minutesDiff * 10);
+        // setOnlineUsers(generateRandomNumber(min, max));
         setLastUpdate(new Date());
         // }, 10000); // 每10秒钟更新一次在线用户数
         setToday(new Date().toISOString().split('T')[0])
@@ -29,8 +29,8 @@ const OnlineCount: React.FC<OnlineCountProps> = ({ jobCount }) => {
 
 
     return (
-        <div className='font-xl font-bold text-[#444] text-center'>
-            Real-time tracking of 30,000+ companies, updated on: <span className='color-red'>{today}</span>, Found <span className='color-red'>{jobCount}</span> relevant job positions, <span className='color-red'>{onlineUsers}</span> people online.
+        <div className='font-2xl font-bold text-[#444] text-center'>
+            Real-time tracking of <span className='text-[red]'>30,000+</span> companies, updated on: <span className='text-[red]'>{today}</span>, Found <span className='text-[red]'>{jobCount}</span> relevant job positions, <span className='text-[red]'>{onlineUsers}</span> people online.
         </div >
     );
 };

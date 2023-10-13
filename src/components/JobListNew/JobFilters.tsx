@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, Space } from 'antd';
 import { JobRequest } from './types';
 import { useConfig } from '@/contexts/GlobalContext';
 
@@ -27,7 +27,24 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
     };
 
     const filterOptions = {
-        nation: configData?.nation?.infoList || [],
+        nation: configData?.nation?.infoList.map(tem => {
+            if (tem.key === 'US') tem.name = '🇺🇸 US';
+            if (tem.key === 'CA') tem.name = '🇨🇦 CA';
+            if (tem.key === 'SG') tem.name = '🇸🇬 SG';
+            if (tem.key === 'HK') tem.name = '🇭🇰 HK';
+            if (tem.key === 'FR') tem.name = '🇫🇷 FR'; // France
+            if (tem.key === 'DE') tem.name = '🇩🇪 DE'; // Germany
+            if (tem.key === 'IT') tem.name = '🇮🇹 IT'; // Italy
+            if (tem.key === 'ES') tem.name = '🇪🇸 ES'; // Spain
+            if (tem.key === 'GB') tem.name = '🇬🇧 GB'; // United Kingdom
+            if (tem.key === 'NL') tem.name = '🇳🇱 NL'; // Netherlands
+            if (tem.key === 'SE') tem.name = '🇸🇪 SE'; // Sweden
+            if (tem.key === 'NO') tem.name = '🇳🇴 NO'; // Norway
+            if (tem.key === 'DK') tem.name = '🇩🇰 DK'; // Denmark
+            if (tem.key === 'FI') tem.name = '🇫🇮 FI'; // Finland
+            if (tem.key === 'PL') tem.name = '🇵🇱 PL'; // Poland
+            return tem;
+        }) || [],        
         type: configData?.type?.infoList || [],
         targetGroup: configData?.target_group?.infoList || [],
         publishCompany: ['Facebook', 'Linkedin', 'Amazon', 'Apple', 'Netflix', 'Google', 'Microsoft'].map(name => ({ name, key: name })),
@@ -44,12 +61,12 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
     };
 
     const filterLabels = {
-        companyName: '🏢 公司名称',
-        nation: '🌍 地区',
-        type: '🛠️ 工作类型',
-        targetGroup: '🧑‍💼 职位类型',
-        publishCompany: '🏷️ 公司类型',
-        status: '💡 状态'
+        companyName: '🏠 Company',
+        nation: '🌍 Loc',
+        type: '🛠️ Role',
+        targetGroup: '🧑‍💻 Type',
+        publishCompany: '🚀 BigTech',
+        status: '💡 Status'
     };
 
     const [localCompanyName, setLocalCompanyName] = useState<string>(filters.companyName || '');
@@ -57,12 +74,12 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
 
     const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLocalCompanyName(event.target.value);
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-        timeoutRef.current = setTimeout(() => {
-            onFilterChange(event.target.name, event.target.value);
-        }, 500);
+        // if (timeoutRef.current) {
+        //     clearTimeout(timeoutRef.current);
+        // }
+        // timeoutRef.current = setTimeout(() => {
+        //     onFilterChange(event.target.name, event.target.value);
+        // }, 500);
     };
 
     useEffect(() => {
@@ -94,19 +111,29 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
             ))}
             {showCompanyName && (
                 <Form.Item label={filterLabels.companyName}>
-                    <Input
-                        value={localCompanyName}
-                        onChange={handleTextFieldChange}
-                        name="companyName"
-                        className='w-[180px] mr-2'
-                        placeholder='请输入公司名称搜索'
-                    />
-                    <Button type="primary" onClick={() => {
-                        setLocalCompanyName('');
-                        onClearFilters()
-                    }}>
-                        重置筛选
-                    </Button>
+                    <Space.Compact className='mr-4'>
+                        <Input
+                            value={localCompanyName}
+                            onChange={handleTextFieldChange}
+                            name="companyName"
+                            className='w-[180px] mr-2'
+                            placeholder='Company Name Search'
+                        />
+                        <Button type="primary" onClick={() => {
+                            onFilterChange("companyName", localCompanyName);
+                        }}>
+                            Search
+                        </Button>
+                    </Space.Compact>
+
+                    {
+                        !isApply && <Button type="primary" onClick={() => {
+                            setLocalCompanyName('');
+                            onClearFilters()
+                        }}>
+                            Reset
+                        </Button>
+                    }
                 </Form.Item>
             )}
         </Form>

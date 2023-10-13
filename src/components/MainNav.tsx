@@ -25,10 +25,10 @@ export function MainNav() {
 
   const dynamicNavItems = configData?.header.infoList.map(item => ({
     title: item.title,
-    href: (item.link === '/jobs/list' ? '/jobs' : item.link) + '?pageId=' + item.id + '&infoId=' + item.info_id,
+    href: (item.link === '/jobs/list' ? '/jobs' : item.link),
     children: Array.isArray(item.children) ? item.children.map(child => ({
       title: child.title,
-      href: (child.link === '/jobs/list' ? '/jobs' : child.link) + '?pageId=' + child.id + '&infoId=' + child.info_id,
+      href: (child.link === '/jobs/list' ? '/jobs' : child.link),
     })) : []
   })) || [];
 
