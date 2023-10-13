@@ -10,7 +10,7 @@ import { convertKeysToCamelCase } from '@/utils';
 
 // 主组件
 const JobList: React.FC = (props: any) => {
-    const isFirstRender = useRef(true);
+    const isFirstRender = useRef(false);
 
     // console.log('infoId', props.infoId)
     const { isApply, emitData } = props;
@@ -45,6 +45,7 @@ const JobList: React.FC = (props: any) => {
     const fetchJobsList = async (params: JobRequest) => {
         setLoading(true);
         try {
+            // console.log('get',props.infoId)
             let fn = isApply ? fetchUserJobsListData : fetchJobsListData;
             const response = await fn({ ...params, infoId: props.infoId });
             const fetchedJobs = response.data.data.jobList;
