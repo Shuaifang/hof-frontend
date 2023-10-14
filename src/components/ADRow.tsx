@@ -101,7 +101,6 @@ const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
     }
 
     return <>
-        (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 bg-[#f5f5f7] p-[10px]">
             <div className="w-full">
                 <h2 className="text-lg font-bold">{data.firstSection.title}</h2>
@@ -149,7 +148,6 @@ const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
                 </div>
             ))}
         </div>
-        )
 
         {/* 在页面左侧和右侧固定的对联广告，如果有image的话，如果同时有link点击会打开新页面 */}
         {/* left */}
