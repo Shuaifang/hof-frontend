@@ -13,6 +13,8 @@ interface Section {
     image?: Image;
     footerText?: string;
     specialNote?: string;
+    original_price?: number;
+    price?: number;
 }
 
 interface Config {
@@ -59,7 +61,6 @@ const AdBanner = ({ imageUrl, link, position }) => {
 
 const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
     const [data, setData] = useState<Config | null>(null);
-    console.log('data', data)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -80,7 +81,9 @@ const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
                             title: `${good.title} ${good.sku_title}`,
                             listItems: good.list.map(item => item.name),
                             footerText: good.intro_text,
-                            specialNote: good.remark
+                            specialNote: good.remark,
+                            original_price: good.original_price,
+                            price: good.price
                         })),
                         left: response.data.left,
                         right: response.data.right,
@@ -126,7 +129,7 @@ const ADRow: React.FC<{ menuId?: number }> = ({ menuId }) => {
                         <p className="text-3xl font-bold text-center text-[#444444]" style={{
                             fontWeight: '700'
                         }}>
-                            <span className="text-sm font-normal line-through">$568</span> $298
+                            <span className="text-sm font-normal line-through">${section.original_price}</span> ${section.price}
                         </p>
                         <div className="list-disc pl-5">
                             {section.listItems.map((item, itemIndex) => (

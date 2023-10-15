@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, notification } from 'antd';
+import { Modal, Button, notification, Spin } from 'antd';
 import JobFilters from './JobFilters';
 import { JobRequest } from './types';
 import { getUserAlert, setUserAlert } from '@/utils/api/user';
@@ -21,26 +21,33 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isVisible, onClos
         targetGroup: '',
         type: '',
     });
-
+    const [loading, setLoading] = useState(false)
+    const [submitLoading, setSubmitLoading] = useState(false)
     // 获取用户当前订阅情况的API请求
     const fetchUserSubscriptions = async () => {
         try {
-            const response = await getUserAlert(null);
-            console.log('response', response)
+            setLoading(true);
+            const response = await getUserAlert(null).finally(() => {
+                setLoading(false);
+            });
             // 更新 filters 状态
             setFilters(prev => ({
                 ...prev,
-                nation: response.data.nation.map((n: any) => n.name),
-                type: response.data.type.map((t: any) => t.name),
-                targetGroup: response.data.target_group.map((tg: any) => tg.name),
+                nation: response.data?.nation?.map((n: any) => n.name) || [],
+                type: response.data?.type?.map((t: any) => t.name) || [],
+                targetGroup: response?.data?.target_group?.map((tg: any) => tg.name) || [],
+                noFeedback: response?.data?.no_feedback?.map((tg: any) => tg.name) || [],
+                publishCompany: response?.data?.publish_company?.map((tg: any) => tg.name) || [],
             }));
         } catch (error) {
             console.error('订阅失败', error);
+            onClose();
         }
     };
 
     // 提交订阅信息的接口的请求
     const submitSubscription = async (subscriptionData: any) => {
+        setSubmitLoading(true)
         try {
             await setUserAlert(subscriptionData);
             notification.success({
@@ -55,6 +62,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isVisible, onClos
                 description: 'Failed to update your job subscription. Please try again later.',
             });
         }
+        setSubmitLoading(false)
     };
 
     const handleFilterChange = (name: string, value: any) => {
@@ -64,11 +72,13 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isVisible, onClos
     const handleSaveSubscription = () => {
 
         const subscriptionData = {
-            is_send: '1', // Assuming you want to set this as true
+            // is_send: '1', // Assuming you want to set this as true
 
-            nation: filters.nation.join(','),
-            target_group: filters.targetGroup.join(','),
-            type: filters.type.join(','),
+            nation: filters.nation,
+            target_group: filters.targetGroup,
+            type: filters.type,
+            no_feedback: filters.noFeedback,
+            publish_company: filters.publishCompany,
         };
         submitSubscription(subscriptionData);
     };
@@ -88,27 +98,31 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({ isVisible, onClos
                 <Button key="back" onClick={onClose}>
                     Cancel
                 </Button>,
-                <Button key="submit" type="primary" onClick={handleSaveSubscription}>
+                <Button key="submit" loading={submitLoading} type="primary" onClick={handleSaveSubscription}>
                     Save Change
                 </Button>,
             ]}
+
         >
-            <span className='my-[5px]'>You’ll receive notifications when new jobs are posted that match your preferences.</span>
-            <JobFilters
-                filters={filters}
-                onFilterChange={handleFilterChange}
-                onClearFilters={() => setFilters({
-                    companyName: '',
-                    limit: '10',
-                    nation: '',
-                    noFeedback: '',
-                    page: '1',
-                    publishCompany: '',
-                    targetGroup: '',
-                    type: '',
-                })}
-                showCompanyName={false}
-            />
+            <Spin spinning={loading} >
+                <span className='my-[5px]'>You’ll receive notifications when new jobs are posted that match your preferences.</span>
+                <JobFilters
+                    filters={filters}
+                    onFilterChange={handleFilterChange}
+                    onClearFilters={() => setFilters({
+                        companyName: '',
+                        limit: '10',
+                        nation: '',
+                        noFeedback: '',
+                        page: '1',
+                        publishCompany: '',
+                        targetGroup: '',
+                        type: '',
+                    })}
+                    showCompanyName={false}
+                />
+            </Spin>
+
         </Modal>
     );
 };

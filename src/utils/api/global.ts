@@ -35,7 +35,7 @@ export const fetchJobsListData = async (data: any) => {
       url: '/job/list',
       method: 'get',
       params: data
-    });
+    }, true);
     return response;
   } catch (error) {
     throw error;

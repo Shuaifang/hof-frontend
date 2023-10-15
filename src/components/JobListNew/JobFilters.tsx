@@ -71,7 +71,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
         type: '🛠️ Role',
         targetGroup: '🧑‍💻 Type',
         publishCompany: '🚀 BigTech',
-        noFeedback: 'noFeedback',
+        noFeedback: '❌ Filtered Tags',
         status: '💡 Status'
     };
 
@@ -97,7 +97,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
     }, [filters]);
 
     return (
-        <Form layout="horizontal" labelCol={{ flex: '110px' }} labelAlign="left">
+        <Form layout="horizontal" labelCol={{ flex: '120px' }} labelAlign="left">
             {Object.keys(filterOptions).filter(tem => {
                 if (isApply) return tem === 'status'
                 return tem !== 'status'

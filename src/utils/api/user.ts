@@ -1,4 +1,4 @@
-import { apiClient,apiWithAuth } from '../apiClient';
+import { apiClient, apiWithAuth } from '../apiClient';
 
 export const loginGoogle = async (data: any) => {
   try {

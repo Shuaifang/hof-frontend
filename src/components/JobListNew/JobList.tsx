@@ -47,19 +47,20 @@ const JobList: React.FC = (props: any) => {
         try {
             // console.log('get',props.infoId)
             let fn = isApply ? fetchUserJobsListData : fetchJobsListData;
-            const response = await fn({ ...params, infoId: props.infoId });
+            const response = await fn({ ...params });
             const fetchedJobs = response.data.data.jobList;
             let { selectInfo, jobDateTable, pageInfo } = response.data.data;
             emitData && emitData(response.data.data);
             try {
 
-                if (selectInfo) {
+                if (selectInfo && params.infoId) {
                     let copyFilters = { ...filters }
                     selectInfo = convertKeysToCamelCase(selectInfo);
                     for (let key in selectInfo) {
                         if (selectInfo[key]) copyFilters[key] = selectInfo[key];
                     }
-                    isFirstRender.current = true;
+                    // isFirstRender.current = true;
+                    // console.log('setFilters',setFilters)
                     setFilters(copyFilters);
                 } else {
                     setFlag(flag + 1);
@@ -81,14 +82,16 @@ const JobList: React.FC = (props: any) => {
 
 
     useEffect(() => {
+        // handleClearFilters();
         if (isFirstRender.current) {
+            isFirstRender.current = false;
             return;
         }
-        handleClearFilters();
+
+        props.infoId && fetchJobsList({  infoId: props.infoId })
     }, [props.infoId])
     useEffect(() => {
         if (isFirstRender.current) {
-            isFirstRender.current = false;
             return;
         }
         // if (flag !== 1) {

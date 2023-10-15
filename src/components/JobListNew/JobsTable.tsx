@@ -294,7 +294,7 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
         return (
           <Dropdown menu={{
             items: statusOptions, onClick: e => {
-              updateApplyStatue({ id: item.id, type: 'apply_statusc', ontent: e.key })
+              updateApplyStatue({ id: item.id, type: 'apply_status', content: e.key })
             }
           }}>
             <Button type='default' className='w-[140px]'>

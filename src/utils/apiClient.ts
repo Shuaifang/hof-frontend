@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { getSession } from 'next-auth/react';
+import { getSession, signIn, signOut } from 'next-auth/react';
+import { notification } from 'antd';
 
 const CACHE_TIME = 30000; // 30 seconds
 
@@ -50,12 +51,50 @@ apiClient.interceptors.response.use(
             timestamp: Date.now(),
             response
         };
+        if (response?.data?.code === 10001) {
+            // Login has expired, please login again
+
+            notification.error({
+                message: 'Authentication Error',
+                description: 'Your session has expired. Please log in again.',
+                onClose: async () => {
+                    // await signOut();
+
+                }
+            });
+            sessionStorage.setItem("token", '')
+            setTimeout(() => {
+                signIn("google", undefined, {
+                    prompt: 'select_account',
+                })
+            }, 2000);
+
+            throw new Error("Token has expired");
+        }
+
         return response;
     },
-    (error) => Promise.reject(error)
+    (error) => {
+        // Check if it is a 401 error. If so, logout the user.
+        if (error.response && error.response.status === 401) {
+            notification.error({
+                message: 'Authentication Error',
+                description: 'Your session has expired. Please log in again.',
+                onClose: () => {
+                    signOut({ callbackUrl: '/login' });
+                }
+            });
+        } else {
+            notification.error({
+                message: 'API Error',
+                description: 'An error occurred while processing your request. Please try again.'
+            });
+        }
+        return Promise.reject(error);
+    }
 );
 
-const apiWithAuth = async (config: AxiosRequestConfig) => {
+const apiWithAuth = async (config: AxiosRequestConfig, cache = false) => {
     if (!config.params) config.params = {};
 
     try {
@@ -68,18 +107,30 @@ const apiWithAuth = async (config: AxiosRequestConfig) => {
             token = session?.token?.token ?? '';
             sessionStorage.setItem("token", token)
         }
-        config.params.token = token;
+        // if (config.method === 'get') {
+            config.params.token = token;
+        // }
+        // if (config.method === 'post') {
+        //     config.data.token = token;
+
+        // }
+        // config.headers = {
+        //     ...config.headers,
+        //     token
+        // }
     } catch (error) {
         console.log(error)
     }
 
     config.params = convertKeysToSnakeCase(config.params);
 
-    const cacheKey = generateCacheKey(config);
-    const cachedResponse = requestCache[cacheKey];
+    if (cache) {
+        const cacheKey = generateCacheKey(config);
+        const cachedResponse = requestCache[cacheKey];
 
-    if (cachedResponse && (Date.now() - cachedResponse.timestamp) <= CACHE_TIME) {
-        return Promise.resolve(cachedResponse.response);
+        if (cachedResponse && (Date.now() - cachedResponse.timestamp) <= CACHE_TIME) {
+            return Promise.resolve(cachedResponse.response);
+        }
     }
 
     return apiClient(config);
