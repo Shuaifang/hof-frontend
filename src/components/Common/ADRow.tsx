@@ -1,6 +1,8 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { fetchIntro } from '@/utils/api/global';
+import { Button } from 'antd';
+import Icons from './Icons';
 
 interface Image {
     src: string;
@@ -43,12 +45,28 @@ const AdBanner = ({ imageUrl, link, position }) => {
     };
     bannerStyle[position] = '0'
 
-    const renderImage = (position) => (
+    const renderImage = () => (
         <div
             className="cursor-pointer z-[999] bg-center bg-no-repeat fixed "
             style={bannerStyle}
             onClick={() => link && window.open(link, '_blank')}
-        ></div>
+        >
+
+            {position === 'left' ? <div className='w-[240px] text-center absolute bottom-[-50px]' >
+                <Button
+                    type="primary"
+                    icon={<Icons.MessageCircle className="h-4 w-4" style={{
+                        transform: 'translateY(3px)'
+                    }} />}
+                    style={{
+                        background: '#000',
+                    }}
+                    onClick={() => {
+                        window.open("https://docs.google.com/forms/d/1EoN8lT3cEXrvbdZ_eu2CPRwlk-0nGryfs23xOaVEJvY")
+                    }}
+                >Submit Request</Button>
+            </div> : ''}
+        </div>
     );
 
     return (
