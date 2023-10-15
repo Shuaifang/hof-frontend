@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Popover, Button, message, Dropdown, Tag, DatePicker, notification } from 'antd';
 import type { MenuProps } from 'antd';
 import type { DatePickerProps } from 'antd';
@@ -24,10 +24,17 @@ interface JobsTableProps {
 
 const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loading, isApply = false, setJobs }) => {
   const [messageApi, contextHolder] = message.useMessage();
+  const [loginstatus, setLoginStatus] = useState(false);
 
+
+  useEffect(() => {
+    isLoggedIn().then(loginRes => {
+      setLoginStatus(loginRes);
+    })
+
+  }, [])
 
   const switchApply = async (id: any) => {
-    let loginstatus = await isLoggedIn();
     if (!loginstatus) {
       notification.warning({
         message: 'Please login',
@@ -49,7 +56,6 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       type: 'success',
       content: 'Apply successful！',
       style: {
-        marginTop: '6vh',
       },
     });
   }
@@ -66,7 +72,6 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
 
 
   const updateApplyStatue = async (data: any) => {
-    let loginstatus = await isLoggedIn();
     if (!loginstatus) {
       notification.warning({
         message: 'Please login',
@@ -79,7 +84,6 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       type: 'success',
       content: 'Updated job status!',
       style: {
-        marginTop: '6vh',
       },
     });
     onPageChange(parseInt(pageInfo.page));
@@ -311,7 +315,6 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       type: 'success',
       content: 'Feedback Received, Thank You!',
       style: {
-        marginTop: '6vh',
       },
     });
 

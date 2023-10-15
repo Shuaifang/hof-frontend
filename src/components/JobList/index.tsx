@@ -127,7 +127,7 @@ const JobList: React.FC = (props: any) => {
         yField: 'num',
         title: {
             // visible: true,
-            text: '所选职位变化趋势',  // 这里是你的标题内容
+            text: 'Job Category Trend',  // 这里是你的标题内容
             // style: {
             //   fontSize: 24,  // 标题字体大小
             //   fontWeight: 'bold',  // 字体加粗
@@ -146,11 +146,11 @@ const JobList: React.FC = (props: any) => {
         },
         meta: {
             date: {
-                alias: '日期',  // x轴的标题
+                alias: 'Date',  // x轴的标题
                 tickCount: 5,  // 显示的刻度数量
             },
             num: {
-                alias: '职位数',  // y轴的标题
+                alias: 'Job Count',  // y轴的标题
                 tickCount: 5,  // 显示的刻度数量
             },
         },
@@ -184,8 +184,8 @@ const JobList: React.FC = (props: any) => {
             }
             {props.showCahrt && <Col span={24}>
                 <div className='w-[80%] ml-[10%]'>
-                    <div className='text-center font-bold text-2xl mb-[20px] mt-[20px]'>所选职位变化趋势</div>
-                    <div className='my-[10px]'>职位数/日期</div>
+                    <div className='text-center font-bold text-2xl mb-[20px] mt-[20px]'>Job Category Trend</div>
+                    <div className='my-[10px]'>Job Count / Date</div>
                     <JobChart config={config} data={chartData} />
                     <div className='h-[40px]'></div>
                 </div>
