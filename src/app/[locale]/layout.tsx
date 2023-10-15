@@ -10,6 +10,8 @@ import { SiteHeader } from '@/components/Common/SiteHeader';
 import ThemeProvider from '@/components/Providers/ThemeProvider';
 import { SessionProvider } from 'next-auth/react';
 import { ConfigProvider } from '@/contexts/GlobalContext';
+import { Button } from 'antd';
+import Icons from '@/components/Common/Icons';
 
 // export const config = { ssr: false };
 export default function RootLayout(params: any) {
@@ -43,7 +45,22 @@ export default function RootLayout(params: any) {
                 <SiteHeader />
                 <main>{children}</main>
                 <footer className='text-center font-bold text-[#444] my-[15px]'>
+                  <div className='text-center mb-[10px]'>
+                    <Button
+                      type="primary"
+                      icon={<Icons.MessageCircle className="h-4 w-4" style={{
+                        transform: 'translateY(3px)'
+                      }} />}
+                      style={{
+                        background: '#000',
+                      }}
+                      onClick={() => {
+                        window.open("https://docs.google.com/forms/d/1EoN8lT3cEXrvbdZ_eu2CPRwlk-0nGryfs23xOaVEJvY")
+                      }}
+                    >Submit Request</Button>
+                  </div>
                   Copyright©2022-2023  haooffer.net All rights reserved
+
                   <div className='h-[30px]'></div>
                 </footer>
               </ThemeProvider>

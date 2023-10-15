@@ -17,23 +17,15 @@ interface JobsTableProps {
   onPageChange: (page: number) => void;
   loading: boolean;
   isApply: boolean;
-  setJobs?: any;
-  onSort: (field: string, order: 'ascend' | 'descend' | null) => void; // 添加这一行
-  sortOrder: { field: string, order: 'ascend' | 'descend' | null }; // 添加这一行
 }
 interface JobsTableProps {
   jobs: JobListItem[];
 }
 
-const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loading, isApply = false, setJobs, onSort, sortOrder }) => {
+const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loading, isApply = false, setJobs }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [loginstatus, setLoginStatus] = useState(false);
 
-  const handleTableChange = (pagination, filters, sorter) => {
-    if (sorter && sorter.columnKey && sorter.order) {
-      onSort(sorter.columnKey, sorter.order);
-    }
-  };
 
   useEffect(() => {
     isLoggedIn().then(loginRes => {
@@ -129,8 +121,6 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       title: '🏢 Company  ',
       dataIndex: 'company',
       key: 'company',
-      sorter: true,
-      sortOrder: sortOrder.field === 'company' ? sortOrder.order : null,
       render: (text: string, item: any) => {
         return <div className='w-[128px] truncate text-left'>{text}</div>
       }
@@ -139,8 +129,6 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       title: '📅 Date',
       dataIndex: 'date',
       key: 'date',
-      sorter: true,
-      sortOrder: sortOrder.field === 'date' ? sortOrder.order : null,
     },
     {
       title: '📍 Loc',
@@ -268,8 +256,6 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       title: '🏢 Company  ',
       dataIndex: 'company',
       key: 'company',
-      sorter: true,
-      sortOrder: sortOrder.field === 'company' ? sortOrder.order : null,
       render: (text: string, item: any) => {
         return <div className='w-[128px] truncate text-left'>{text}</div>
       }
@@ -293,8 +279,6 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
       title: '📅 Date',
       dataIndex: 'date',
       key: 'date',
-      sorter: true,
-      sortOrder: sortOrder.field === 'date' ? sortOrder.order : null,
       render: (text: string, item: any) => {
         return (
           <DatePicker format="" defaultValue={dayjs(text, 'YYYY-MM-DD')} onChange={e => {
@@ -351,7 +335,6 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
           total: pageInfo.count,
           onChange: onPageChange,
         }}
-        onChange={handleTableChange} // 添加这一行
       />
     </>
 

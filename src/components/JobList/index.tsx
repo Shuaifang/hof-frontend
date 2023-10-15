@@ -29,6 +29,14 @@ const JobList: React.FC = (props: any) => {
     const [jobs, setJobs] = useState<Job[]>([]);
     const [chartData, setChartData] = useState([]);
 
+    const [sortOrder, setSortOrder] = useState<{ field: string, order: 'ascend' | 'descend' | null }>({ field: 'company_name', order: null });
+
+    const handleSort = (field: string, order: 'ascend' | 'descend' | null) => {
+        setSortOrder({ field, order });
+
+        fetchJobsList(filters);
+    };
+
     const [pageInfo, setPageInfo] = useState<PageInfo>({
         count: 0,
         limit: '20',
@@ -47,7 +55,7 @@ const JobList: React.FC = (props: any) => {
         try {
             // console.log('get',props.infoId)
             let fn = isApply ? fetchUserJobsListData : fetchJobsListData;
-            const response = await fn({ ...params });
+            const response = await fn({ ...params, sortType: sortOrder.field, sortOrder: sortOrder.order });
             const fetchedJobs = response.data.data.jobList;
             let { selectInfo, jobDateTable, pageInfo } = response.data.data;
             emitData && emitData(response.data.data);
@@ -158,12 +166,19 @@ const JobList: React.FC = (props: any) => {
             label: {
                 autoRotate: false,  // 防止标签相互覆盖
                 autoHide: false,  // 防止标签自动隐藏
+                style: {
+                    fontSize: 14,
+                },
             },
+
         },
         yAxis: {
             label: {
                 autoRotate: false,  // 防止标签相互覆盖
                 autoHide: false,  // 防止标签自动隐藏
+                style: {
+                    fontSize: 14,
+                },
             },
         },
         smooth: true, // 是否平滑
@@ -187,7 +202,7 @@ const JobList: React.FC = (props: any) => {
                     <div className='text-center font-bold text-2xl mb-[20px] mt-[20px]'>Job Category Trend</div>
                     <div className='my-[10px]'>Job Count / Date</div>
                     <JobChart config={config} data={chartData} />
-                    <div className='h-[40px]'></div>
+                    <div className='h-[20px]'></div>
                 </div>
             </Col>}
             {props.showOnline && <Col span={24}>
@@ -202,6 +217,8 @@ const JobList: React.FC = (props: any) => {
                     pageInfo={pageInfo}
                     onPageChange={handlePageChange}
                     setJobs={setJobs}
+                    onSort={handleSort}
+                    sortOrder={sortOrder}
                 />
             </Col>
         </Row>

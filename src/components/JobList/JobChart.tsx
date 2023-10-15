@@ -19,7 +19,7 @@ interface LineChartProps {
 
 const JobChart: React.FC<LineChartProps> = ({ config }) => {
     const defaultConfig = {
-        height: 400,
+        height: 300,
         ...config,
         slider: {
             start: 0,
@@ -27,6 +27,9 @@ const JobChart: React.FC<LineChartProps> = ({ config }) => {
             // height: 50,
             trendCfg: {
                 smooth: true
+            },
+            textStyle: {
+                fontSize: 14
             }
         },
     };
