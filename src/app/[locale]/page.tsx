@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from 'react';
 import { fetchIndexData } from '@/utils/api/global';
-import ADRow from '@/components/ADRow';
+import ADRow from '@/components/Common/ADRow';
 
 const CtaList = (props:any) => {
   const data:any = props.data;

@@ -1,13 +1,13 @@
 // @ts-nocheck
 import React from 'react';
-import { Table, Popover, Button, message, Dropdown, Tag, DatePicker } from 'antd';
+import { Table, Popover, Button, message, Dropdown, Tag, DatePicker, notification } from 'antd';
 import type { MenuProps } from 'antd';
 import type { DatePickerProps } from 'antd';
 
 
 import { JobListItem, PageInfo } from './types';  // 确保引入路径正确
 import { setApplyJob, setJobFeedback, setUserJobStatus } from '@/utils/api/user';
-import Icons from '../Icons';
+import Icons from '../Common/Icons';
 import { isLoggedIn } from '@/utils';
 import dayjs from 'dayjs';
 
@@ -22,28 +22,29 @@ interface JobsTableProps {
   jobs: JobListItem[];
 }
 
-const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loading, isApply = false }) => {
+const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loading, isApply = false, setJobs }) => {
   const [messageApi, contextHolder] = message.useMessage();
 
 
   const switchApply = async (id: any) => {
     let loginstatus = await isLoggedIn();
     if (!loginstatus) {
-      messageApi.warning(
-        {
-          type: 'warning',
-          content: 'To access this feature, please log in. Your dream job is just a few clicks away! ',
-          style: {
-            marginTop: '6vh',
-          },
-        }
-      );
+      notification.warning({
+        message: 'Please login',
+        description: 'To access this feature, please log in. Your dream job is just a few clicks away! ',
+      });
       return;
     }
+    setJobs(jobs.map(tem => {
+      if (tem.id === id) {
+        tem.is_apply = 1;
+      }
+      return tem;
+    }))
     await setApplyJob({
       id
     })
-    onPageChange(parseInt(pageInfo.page));
+    // onPageChange(parseInt(pageInfo.page));
     messageApi.open({
       type: 'success',
       content: 'Apply successful！',
@@ -67,15 +68,10 @@ const JobsTable: React.FC<JobsTableProps> = ({ jobs, pageInfo, onPageChange, loa
   const updateApplyStatue = async (data: any) => {
     let loginstatus = await isLoggedIn();
     if (!loginstatus) {
-      messageApi.warning(
-        {
-          type: 'warning',
-          content: 'To access this feature, please log in. Your dream job is just a few clicks away! ',
-          style: {
-            marginTop: '6vh',
-          },
-        }
-      );
+      notification.warning({
+        message: 'Please login',
+        description: 'To access this feature, please log in. Your dream job is just a few clicks away! ',
+      });
       return;
     }
     await setUserJobStatus(data)

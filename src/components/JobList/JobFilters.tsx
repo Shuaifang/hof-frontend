@@ -61,7 +61,7 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
             'Phone Interview',
             'Onsite',
             'Offered',
-            'Rejecte',
+            'Rejected',
         ].map(name => ({ name, key: name }))
     };
 
@@ -100,13 +100,14 @@ const JobFilters: React.FC<JobFiltersProps> = ({ filters, onFilterChange, onClea
         <Form layout="horizontal" labelCol={{ flex: '120px' }} labelAlign="left">
             {Object.keys(filterOptions).filter(tem => {
                 if (isApply) return tem === 'status'
+                if (!showCompanyName) return tem !== 'noFeedback' && tem !== 'publishCompany' && tem !== 'status'
                 return tem !== 'status'
             }).map(filterName => (
                 <Form.Item label={filterLabels[filterName as keyof typeof filterOptions]} key={filterName}>
                     {filterOptions[filterName as keyof typeof filterOptions].map(option => (
                         <Checkbox
                             key={option.key}
-                            checked={(filters[filterName as keyof JobRequest] as string[]).includes(option.key)}
+                            checked={(filters[filterName as keyof JobRequest] as string[])?.includes(option.key)}
                             onChange={e => handleCheckboxChange(e, filterName)}
                             value={option.key}
                         >

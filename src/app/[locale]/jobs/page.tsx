@@ -1,7 +1,7 @@
 // @ts-nocheck
 'use client';
-import ADRow from '@/components/ADRow';
-import JobList from '@/components/JobListNew/JobList';
+import ADRow from '@/components/Common/ADRow';
+import JobList from '@/components/JobList';
 import React from 'react';
 
 const JobsPage = (props: any) => {

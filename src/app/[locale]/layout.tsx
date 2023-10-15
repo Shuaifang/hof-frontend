@@ -6,8 +6,8 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 
-import { SiteHeader } from '@/components/SiteHeader';
-import ThemeProvider from '@/components/ThemeProvider';
+import { SiteHeader } from '@/components/Common/SiteHeader';
+import ThemeProvider from '@/components/Providers/ThemeProvider';
 import { SessionProvider } from 'next-auth/react';
 import { ConfigProvider } from '@/contexts/GlobalContext';
 

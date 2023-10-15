@@ -88,7 +88,7 @@ const JobList: React.FC = (props: any) => {
             return;
         }
 
-        props.infoId && fetchJobsList({  infoId: props.infoId })
+        props.infoId && fetchJobsList({ infoId: props.infoId })
     }, [props.infoId])
     useEffect(() => {
         if (isFirstRender.current) {
@@ -201,6 +201,7 @@ const JobList: React.FC = (props: any) => {
                     loading={loading}
                     pageInfo={pageInfo}
                     onPageChange={handlePageChange}
+                    setJobs={setJobs}
                 />
             </Col>
         </Row>

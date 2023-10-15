@@ -2,7 +2,7 @@
 'use client';
 
 import { useSession, signIn, signOut, getSession } from 'next-auth/react';
-import JobList from '@/components/JobListNew/JobList';
+import JobList from '@/components/JobList';
 import { useState } from 'react';
 export default function Page() {
     const session = useSession();

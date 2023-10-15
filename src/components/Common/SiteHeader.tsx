@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { Button, Avatar, Menu, Dropdown, notification } from 'antd';
 import type { MenuProps } from 'antd';
 
-import SubscriptionModal from './JobListNew/SubscribeJobModal';
+import SubscriptionModal from '../JobList/SubscribeJobModal';
 
 
 export const config = { ssr: false };
